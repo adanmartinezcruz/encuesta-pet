@@ -1,5 +1,5 @@
 // Copia local de la encuesta para responder sin señal. Al cambiar la página, subir este número.
-const VERSION = "pet-encuesta-v1-20261015";
+const VERSION = "pet-encuesta-v2-20261016";
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(["./"]))); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k))))); self.clients.claim(); });
 self.addEventListener("fetch", e => {
