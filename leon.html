@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Encuesta PET · León</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{ --papel:#ffffff; --tinta:#0e2a3b; --suave:#4a6271; --pet:#17689a; --pet-claro:#e3f0f8; --verde:#1d7a4e; --verde-claro:#e2f4ea; --linea:#c6d4dc; --sel:#0e2a3b; --aviso:#9b2c1f;
+  color-scheme: light; box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --papel:#0f1b22; --tinta:#e8f1f5; --suave:#a3b7c2; --pet:#6db6e2; --pet-claro:#16303f; --verde:#63c994; --verde-claro:#15322a; --linea:#2c4250; --sel:#e8f1f5; --aviso:#ff9a85; color-scheme:dark; } }
+:root[data-theme="dark"]{ --papel:#0f1b22; --tinta:#e8f1f5; --suave:#a3b7c2; --pet:#6db6e2; --pet-claro:#16303f; --verde:#63c994; --verde-claro:#15322a; --linea:#2c4250; --sel:#e8f1f5; --aviso:#ff9a85; color-scheme:dark; }
+html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+*,*::before,*::after{ box-sizing:inherit; }
+body{ margin:0; background:var(--papel); color:var(--tinta); font:400 19px/1.45 "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+body::before{ content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:10; background:var(--papel); }
+header{ position:sticky; top:env(safe-area-inset-top,0px); z-index:5; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 18px; background:var(--papel); border-bottom:2px solid var(--linea); }
+.marca-estudio{ font-weight:700; font-size:15px; color:var(--suave); }
+#voz{ min-height:48px; padding:0 20px; border-radius:24px; border:0; background:var(--verde); color:#fff; font-family:inherit; font-weight:700; font-size:18px; line-height:1; cursor:pointer; }
+#voz[aria-pressed="true"]{ background:var(--tinta); color:var(--papel); }
+main{ max-width:620px; margin:0 auto; padding:22px 18px 170px; }
+h1{ font-size:27px; line-height:1.22; margin:6px 0 14px; outline:none; }
+h2{ font-size:22px; margin:28px 0 8px; } h3{ font-size:17px; margin:18px 0 6px; }
+.texto{ font-size:20px; margin:0 0 14px; } .nota{ color:var(--suave); font-size:18px; margin:0 0 16px; }
+.lista{ padding-left:22px; font-size:19px; } .lista li{ margin-bottom:10px; }
+.escenario{ background:var(--pet-claro); border-left:6px solid var(--pet); padding:14px 16px; font-size:20px; border-radius:4px; margin:0 0 18px; }
+.opciones{ display:grid; gap:12px; } .opciones.dos{ grid-template-columns:1fr 1fr; }
+.op,.item{ display:flex; align-items:center; gap:14px; width:100%; min-height:62px; padding:12px 16px; text-align:left; font:inherit; font-size:19px; color:var(--tinta); background:var(--papel); border:2px solid var(--linea); border-radius:10px; cursor:pointer; }
+.op.sel,.item.sel{ border:4px solid var(--sel); padding:10px 14px; font-weight:700; }
+.marca{ flex:none; width:26px; height:26px; border-radius:50%; border:2px solid var(--suave); display:inline-grid; place-items:center; }
+.sel .marca{ border-color:var(--sel); background:var(--sel); }
+.sel .marca::after{ content:""; width:7px; height:13px; border:solid var(--papel); border-width:0 3px 3px 0; transform:translateY(-2px) rotate(45deg); }
+.numfila{ display:flex; align-items:center; gap:12px; margin:8px 0 12px; }
+input.grande{ width:9ch; font-family:inherit; font-weight:700; font-size:34px; line-height:1.1; padding:10px 12px; border:3px solid var(--linea); border-radius:10px; color:var(--tinta); background:var(--papel); }
+input.grande:focus,input:focus-visible,button:focus-visible{ outline:3px solid var(--pet); outline-offset:2px; }
+.unidad{ font-size:20px; color:var(--suave); }
+.campo{ display:block; font-size:19px; margin:16px 0 4px; } .campo input[type=text]{ display:block; margin-top:6px; }
+input[type=text]:not(.grande),input[type=search]{ width:100%; font:inherit; font-size:19px; padding:12px; border:2px solid var(--linea); border-radius:10px; color:var(--tinta); background:var(--papel); }
+.buscar{ margin-bottom:10px; }
+.listaScroll{ max-height:46vh; overflow-y:auto; display:grid; gap:8px; padding:4px; border:2px solid var(--linea); border-radius:10px; }
+.item{ min-height:54px; font-size:18px; } .item.otra{ background:var(--pet-claro); }
+.elegidas{ font-weight:700; margin:10px 0 0; }
+.enlace{ background:none; border:0; color:var(--pet); font:inherit; font-size:18px; text-decoration:underline; padding:10px 0; cursor:pointer; text-align:left; }
+.aviso{ color:var(--aviso); font-weight:700; }
+#barra{ position:fixed; left:0; right:0; bottom:0; z-index:5; padding:6px 18px calc(12px + env(safe-area-inset-bottom,0px)); background:var(--papel); border-top:2px solid var(--linea); }
+#pie{ display:flex; gap:12px; justify-content:center; }
+.btn{ flex:1; max-width:420px; min-height:60px; border-radius:12px; font-family:inherit; font-weight:700; font-size:21px; line-height:1; cursor:pointer; border:0; }
+.btn.primario{ background:var(--pet); color:#fff; } .btn.primario:disabled{ background:var(--linea); color:var(--suave); cursor:not-allowed; }
+.btn.secundario{ background:var(--papel); color:var(--tinta); border:2px solid var(--tinta); }
+.btn.atras{ flex:0 0 auto; min-width:110px; }
+#estado{ text-align:center; font-size:14px; color:var(--suave); margin:0 0 6px; } #progreso{ font-size:13px; color:var(--suave); margin:0; }
+/* Tarjeta de elección: el precio es lo que se ve primero */
+.tarjeta{ display:grid; gap:12px; margin:8px 0 6px; }
+.alt{ display:grid; grid-template-columns:1fr auto; grid-template-areas:"nom nom" "precio dist" "gar gar"; gap:4px 12px; width:100%; text-align:left; font:inherit; color:var(--tinta); background:var(--papel); border:2px solid var(--linea); border-radius:12px; padding:12px 14px; }
+button.alt{ cursor:pointer; }
+.alt.actual{ border-style:dashed; }
+.alt.sel{ border:4px solid var(--sel); padding:10px 12px; }
+.alt .nom{ grid-area:nom; display:flex; align-items:center; gap:10px; font-size:17px; font-weight:700; color:var(--suave); }
+.alt .precio{ grid-area:precio; font-size:34px; font-weight:700; line-height:1.05; } .alt .precio small{ font-size:16px; font-weight:400; color:var(--suave); }
+.alt .dist{ grid-area:dist; justify-self:end; text-align:right; font-size:21px; font-weight:700; display:grid; justify-items:end; gap:2px; }
+.pisadas{ display:flex; gap:3px; color:var(--suave); } .pie{ width:11px; height:16px; }
+.alt .gar{ grid-area:gar; justify-self:start; font-size:17px; font-weight:700; color:var(--tinta); background:var(--pet-claro); padding:4px 8px; border-radius:6px; }
+.prueba{ margin-top:30px; border-top:2px solid var(--linea); padding-top:10px; }
+.desliza{ overflow-x:auto; max-width:100%; } .prueba table{ border-collapse:collapse; font-size:13px; } .prueba th,.prueba td{ border:1px solid var(--linea); padding:3px 6px; white-space:nowrap; text-align:left; }
+@media (max-width:380px){ .opciones.dos{ grid-template-columns:1fr; } .alt .precio{ font-size:30px; } h1{ font-size:24px; } }
+@media (prefers-reduced-motion: reduce){ *{ scroll-behavior:auto !important; } }
+</style>
+</head>
+<body>
+<header><span class="marca-estudio">León · Prospectiva Circular</span></header>
+<main id="main" aria-live="polite"></main>
+<div id="barra"><p id="estado"></p><div id="pie"></div><p id="progreso" style="text-align:center"></p></div>
+<script src="config.js"></script>
+<script>window.CONFIG = {"clave": "leon", "ciudad": "León, Guanajuato", "telefono": "55 35 66 7196", "colonias": ["10 de Mayo", "27 de Septiembre (const Gto)", "8 de Marzo", "Acrópolis", "Adquirientes de Ibarrilla", "Agua Azul", "Alameda de La Presa", "Alameda Diamante", "Alamedas de Alcázar", "Alamedas de Barceló", "Alamedas de España", "Albazul Residencial", "Aldaba", "Alfaro", "Altavista", "Ampliación León I", "Ampliación San Francisco", "Andrade", "Ángeles y Medina", "Antenas de Arriba", "Anturios", "Arbide", "Arboleda del Refugio", "Arboleda San Hilarión", "Arboleda San José", "Arboledas de Ibarrilla", "Arboledas de La Luz", "Arboledas de Los Castillos I", "Arboledas de los Castillos II", "Arboledas de San Pedro", "Arboledas de Señora", "Arboledas del Campo", "Arboledas del Valle", "Arcoiris", "Arcos Antiqua", "Arroyo Hondo", "Azahares", "Aztecas", "Azul Maguey", "Balcón de las Hilamas", "Balcones de Jerez", "Balcones de la Fragua", "Balcones de La Joya", "Balcones de la Presa", "Balcones del Campestre", "Balcones Tulipanes", "Barranca de Venaderos", "Barranca del Refugio", "Belén", "Bellavista", "Benito Juárez", "Betania", "Bosque Azul", "Bosque del Valle", "Bosques (Misael Núñez)", "Bosques de La Pradera", "Bosques de La Presa", "Bosques de los Cedros", "Bosques de Los Naranjos", "Bosques de Rentería", "Bosques de San Andrés", "Bosques del Campestre", "Bosques del Carmen", "Bosques del Pedregal", "Bosques del Refugio", "Bosques del Sur", "Bosques Reales", "Brisas de Echeveste", "Brisas de San Francisco", "Brisas de San Nicolás", "Brisas del Campo", "Brisas del Campo II", "Brisas del Carmen", "Brisas del Lago", "Brisas del Pedregal", "Brisas del Sol", "Brisas del Vergel", "Buenavista", "Buenos Aires", "Bugambilias", "Camino a San Juan", "Campestre de Jerez", "Campestre Nuevo Jerez", "Campo Fuerte Residencial", "Campo Verde", "Campo Viña", "Cañada de Alfaro", "Cañada de Jerez", "Cañada del Campestre", "Cañada del Real", "Cañada del Refugio", "Cañada Diamante", "Cañón de La India", "Cantarranas", "Canteritas de Echeveste", "Casa Blanca", "Casa de Piedra", "Castello ll", "Castillos Viejos", "Caudal del Río", "Cementos", "Central de Abastos", "Centro", "Centro Bodeguero las Trojes", "Centro de Prevención Social", "Centro Familiar La Piedad", "Centro Familiar Soledad", "Cerrito Amarillo", "Cerrito de Guadalupe", "Cerrito de Jerez", "Cerrito de La Joya", "Chalet \"La Cumbre\"", "Chapalita", "Chulavista Pro Vivienda Obrera", "Cibeles", "Cima Diamante", "Ciudad Aurora", "Ciudad del Niño", "Ciudad Industrial", "Ciudad Satélite", "Club Campestre", "Club Hípico", "Club Loyola", "Colina de La Hacienda", "Colina Real", "Colinas de Gran Jardín", "Colinas de la Fragua", "Colinas de La Fragua Plus", "Colinas de León", "Colinas de Plata", "Colinas de San Isidro", "Colinas de Santa Julia", "Colinas del Carmen", "Colinas San Francisco", "Complejo La Cima", "Condominio Industrial León", "Conjunto habitacional Cedros", "Conjunto habitacional Hera", "Conjunto habitacional Los Nogales", "Convive", "Cortijos de La Gloria", "Country Club Gran Jardín", "Country del Lago", "Cruz de la Soledad", "Cumbres de Arbide", "Cumbres de la Gloria", "Cumbres de La Piscina", "Cumbres de la Pradera", "Cumbres de Medina", "Cumbres del Campestre", "Cumbres del Sol", "Danubio Azul", "De Santiago", "Del Cosmos (San Bernardo)", "Del Rocío", "Delta 2000", "Delta de Jerez", "Desarrollo Baleares", "Desarrollo El Potrero", "Echeveste 2000", "Echeveste Norte", "Ecológico de León (Piel)", "Ejido de San José de la Joya", "El Álamo", "El Árbol", "El Cacerío", "El Campanario", "El Carmen", "El Carmen (C.T.M.)", "El Castillo", "El Cid", "El Coecillo", "El Condado Plus", "El Consuelo", "El Cortijo", "El Cuarenteño", "El Dorado", "El Dorado II", "El Duraznal", "El Encanto", "El Faro", "El Granjeno", "El Guajito", "El Llano Grande", "El Lucero", "El Mayorazgo Residencial", "El Mirador Campestre", "El Mirador Oriental", "El Molino Residencial  y Golf", "El Observatorio 2", "El Paisaje", "El Palmar", "El Palote", "El Palote Sur Fracciones", "El Parador", "El Paraíso", "El Peluchan", "El Penitente", "El Peñón", "El Pochote", "El Porvenir", "El Potrero", "El Pueblito del Campestre", "El Recuerdo", "El Refugio", "El Refugio Campestre", "El Renacimiento", "El Retiro", "El Rosario", "El Rotario", "El Rubí", "El Salto", "El Tecotán", "El Tlacuache Ote.", "El Tlacuache Pte.", "El Trébol", "El Trianon", "El Valladito", "El Vivero", "Entre dos Aguas", "Ermita", "Esmeralda del Bajío", "España", "Españita", "Estancia Los Naranjos", "Estrella", "Ex Hacienda la Morena I", "Ex Hacienda la Morena II", "Eyupol", "Fátima", "Fincas Sayavedra", "Flores Magón", "Ford del Campestre", "Foresta Jardín", "Fracción del Coecillo", "Fracción del Granjeno", "Fraccionamiento Industrial la Pompa", "Fracciones Corral de Piedra", "Fracciones de Echeveste (pro)", "Fracciones de Hacienda La Pompa", "Fracciones de Jerez", "Fracciones de los Arcos", "Fracciones de Los Gómez", "Fracciones de Mesa Medina", "Fracciones de San Nicolás", "Fracciones de Santa Lucía", "Fracciones del Crespo", "Fracciones del Guaje", "Fracciones del Palote", "Fracciones del Rosario", "Fracciones San Pedro", "Francisco Lozornio", "Frutales de la Hacienda", "Fuentes del Valle", "Futurama Monterrey", "Gran Jardín", "Granada", "Granja Ceres", "Granjas Campestre", "Granjas del Rosario", "Granjas Echeveste", "Granjas El Palote", "Granjas Jardines de Jerez", "Granjas las Amalias", "Granjas San Carlos", "Granjeno Plus (IVEG)", "Guadalupe", "Habitacional Coecillo", "Hacienda de Guadalupe", "Hacienda de los Naranjos", "Hacienda del Campestre", "Hacienda Echeveste", "Hacienda las Mandarinas", "Hacienda Los Otates", "Hacienda San Ángel", "Hacienda San José", "Hacienda San Miguel", "Hacienda Santa Catalina", "Hacienda Santa Fe", "Haciendas de Ibarrilla", "Haciendas del Carmen", "Haciendas del Carmen II", "Hernández Rougon", "Héroes de Chapultepec", "Hidalgo", "Hidalgo del Valle", "Horizonte Azul", "Huertas de Medina", "Ibarrilla", "Independencia", "Independencia Infonavit", "Industrial (Hab.)", "Industrial Brisas del Campo", "Industrial del Norte", "Industrial Delta", "Industrial Génesis", "Industrial Hidalgo", "Industrial Juárez", "Industrial Julián de Obregón", "Industrial La Capilla", "Industrial las Cruces", "Industrial Pamplona", "Industrial San Crispín", "Industrial San Jorge", "Industrial Santa CROCCE", "Industrial Santa Julia", "Insurgentes", "Islas de León", "Jaime Nunó", "Jardín Delta", "Jardín Magnolias", "Jardines de Andalucía", "Jardines de Echeveste", "Jardines de Jerez", "Jardines de Jerez II", "Jardines de Jerez III", "Jardines de la Bufa", "Jardines de La Pradera", "Jardines de la Presa", "Jardines de Los Naranjos", "Jardines de Los Reyes", "Jardines de Maravillas", "Jardines de Oriente", "Jardines de Providencia", "Jardines de San Juan", "Jardines de San Miguelito", "Jardines de San Pedro", "Jardines de San Sebastián", "Jardines de Santa Fe", "Jardines de Santa Julia", "Jardines del Bosque", "Jardines del Campestre", "Jardines del Moral", "Jardines del Río", "Jardines del Sol", "Jardines del Valle", "Jardines Lomas de Medina", "Jesús de Nazaret", "Jesús María", "Jesús María (El Vergel)", "John F Kennedy", "Jol-gua-ber", "Josefina", "Joyas de Castilla", "Joyas de Castilla Plus", "Joyas de La Loma", "Juan Valle", "Julián Carrillo", "Killian", "Killian II", "La Antiqua", "La Brisa", "La Campiña", "La Cañada", "La Candelaria", "La Cantera", "La Capilla de Alfaro", "La Carmona", "La Cima de León", "La Condesa", "La Escondida", "La Esperanza", "La Esperanza de Jerez", "La Floresta", "La Florida", "La Fragua", "La Gloria", "La Hacienda", "La Hacienda de León Residencial y Golf", "La Haciendita", "La Herradura", "La India", "La Joya", "La Lagunita", "La Loma", "La Lucita", "La Luz", "La Margarita", "La Marina", "La Marquesa", "La Martinica", "La Medalla", "La Merced (Ramírez García)", "La Mora (cruz de Cantera)", "La Moreña", "La Nopalera", "La Noria", "La Nueva Ermita", "La Pechuga", "La Pera", "La Perita", "La Piedrera", "La Pirámide", "La Piscina", "La Piscina CTM", "La Placita", "La Pradera", "La Presa de la Joya", "La Puerta de Hierro", "La Raza", "La Selva", "La Vigatta", "La Virgen", "La Yesca", "Ladera de Jerez", "Lagos de Medina", "Lagos del Campestre", "Las Águilas", "Las Américas", "Las Arboledas", "Las Arrayanes II", "Las Camelinas", "Las Flores", "Las Fuentes", "Las Fuentes de San Pedro", "Las Glorias", "Las Hilamas", "Las Huertas", "Las Mandarinas", "Las Mansiones Residencial", "Las Margaritas", "Las Palmas", "Las Presitas", "Las Presitas del Consuelo", "Las Presitas II", "Las Quintas", "Las Rosas", "Las Tiritas", "Las Torres", "Las Torres de Santa Rosa", "Las Trojes", "Las Villas", "Laureles de La Selva", "Laureles Vallarta", "León I", "León II", "León Moderno", "Libertad", "Linares", "Lindavista", "Loma Bonita", "Loma Dorada", "Loma Hermosa", "Loma Real", "Loma Verde", "Lomas de Arbide", "Lomas de Contreras", "Lomas de Echeveste", "Lomas de Gran Jardín", "Lomas de Guadalupe", "Lomas de Ibarrilla", "Lomas de Jerez", "Lomas de La Paz", "Lomas de La Piscina", "Lomas de La Presa", "Lomas de La Trinidad", "Lomas de Las Hilamas", "Lomas de Las Presitas", "Lomas de Los Castillos", "Lomas de los Naranjos", "Lomas de los Olivos", "Lomas de Medina", "Lomas de San José de la Joya", "Lomas del Campestre", "Lomas del Condado", "Lomas del Edén", "Lomas del Mirador", "Lomas del Pedregal", "Lomas del Refugio", "Lomas del Sol", "Lomas del Valle", "Lomas Vista Hermosa Sur", "Loreto Residencial", "Los Abedules", "Los Aguacates", "Los Alpes Residencial", "Los Ángeles", "Los Arrayanes", "Los Carcamos", "Los Castillos", "Los Cedros", "Los Colorines", "Los Fresnos", "Los Gavilanes", "Los Héroes León", "Los Laureles", "Los Limones", "Los Murales", "Los Murales II", "Los Naranjos", "Los Olivos", "Los Paraísos", "Los Pinitos", "Los Pinos", "Los Pirules", "Los Portones", "Los Sauces del Moral", "Lourdes", "Luz de la Presa", "Luz del Parque", "Luz María Diaz Infante", "Magisterial", "Maguro A.C.", "Manantiales", "Maravillas", "Maravillas II", "Maravillas III", "Marfil", "María de La Luz", "María Dolores", "Medina", "Mega Price", "Mezquital 2000", "Mezquital de Jerez", "Mezquital del Carmen", "Michoacán", "Miguel de Cervantes Saavedra", "Miguel Hidalgo", "Mineral de la Joya", "Mirador de Arbide", "Mirador de Gran Jardín", "Misión de La Florida", "Misión de La Joya", "Misión de La Luz", "Misión de La Presa", "Misión de San José", "Misión de San José 2a Secc", "Misión del Carmen", "Misión del Norte", "Misión La Cañada", "Misión Santa Fe", "Moderna", "Montaña del Sol de La Joya", "Monte de Cristo", "Morelos (el Guaje)", "Natura", "Negrete", "Norte los Castillos", "Norteña", "Nte. San Antonio del Alambrado", "Nte. Santa María de Cementos", "Nueva Candelaria", "Nuevo Amanecer", "Nuevo León", "Nuevo Milenio", "Oasis", "Obregón", "Obrera", "Observatorio", "Oriental", "Oriental Anaya", "Ote. Monte de Cristo", "Ote. Villas Santa Julia", "Palenque de Ibarrilla", "Palmas 2000", "Palomares", "Panorama", "Paraíso Real", "Parque Chapultepec", "Parque Ecológico Santa Lucía", "Parque Industrial La Trinidad", "Parque La Noria", "Parque Manzanares", "Parques de San Juan", "Parques del Sur", "Paseo de la Pradera", "Paseos de Andalucía", "Paseos de La Castellana", "Paseos de la Cima", "Paseos de La Cima Plus", "Paseos de la Fragua", "Paseos de La Joya", "Paseos de Miravalle", "Paseos del Arroyo", "Paseos del Bosque", "Paseos del Country", "Paseos del Maurel", "Paseos del Molino", "Paso del Río de los Castillo", "Pedregal de Jerez", "Pedregal de San Carlos", "Pedregal de Satélite", "Pedregal del Campestre", "Pedregal del Carmen", "Pedregal del Gigante", "Pedregales de Echeveste", "Peña Alta", "Peñitas", "Periodistas Mexicanos (J. López)", "Pía Monte", "Piedra Azul l", "Piletas I", "Piletas II", "Piletas III", "Piletas IV", "Pinar del Tajo", "Pirules Residencial", "Plaza de Toros", "Plaza Hidalgo", "Plaza Mayor", "Polígono Industrial Milenio", "Popular Anaya", "Popular Guadalajara", "Popular Inca", "Popular La Luz", "Popular Maya", "Popular Polanco", "Porta Fontana", "Porta Toscana", "Portal la Luz", "Portales de La Arboleda", "Portales de San Sebastián", "Portales de Santa Úrsula", "Portón Cañada", "Portón de Los Girasoles", "Portones de San Pedrito", "Portones del Campestre", "Portones del Carmen", "Portones del Gran Jardín", "Portones del Moral", "Pradera del Sol", "Praderas de Agua Azul", "Praderas de Santa Rosa", "Praderas del Bosque", "Praderas del Refugio", "Praderas del Sur", "Prado Hermoso", "Prados Verdes", "Presidentes de México", "Privada del Moral", "Privada Echeveste", "Privada Rinconada de las Flores", "Privanza del Condado", "Privanza los Naranjos", "Providencia", "Pueblo Nuevo", "Puerta Dorada", "Puerta San Carlos", "Puerta San Rafael", "Puertas de La Alborada", "Punta Campestre", "Punta Cañada", "Punta del Sol", "Punta Dorada", "Punto Verde", "Purísima de Jerez", "Purísima de Muñoz", "Quinta Hilario Medina", "Quinta los Castillos", "Quinta Los Naranjos", "Quintas San Lorenzo", "Rancho La Florida", "Real 2000", "Real Campestre", "Real de Bugambilias", "Real de Camelinas", "Real de Jerez", "Real de La Joya", "Real de Las Palmas", "Real de León", "Real de los Naranjos", "Real de San Antonio", "Real de San José", "Real de Villas", "Real del Bosque", "Real del Castillo", "Real del Refugio", "Real Delta", "Real los Murales", "Real Providencia", "Refugio de San José", "Residencial Benevento", "Residencial Brisas", "Residencial Camelinas", "Residencial Campo Palmyra", "Residencial Coyoacán", "Residencial del Moral", "Residencial del Parque", "Residencial El Carmen", "Residencial El Mezquite", "Residencial Hacienda Viñedos", "Residencial Hestea", "Residencial La Lluvia", "Residencial La Toscana", "Residencial Las Magnolias", "Residencial Lomas Punta del Este", "Residencial Platino", "Residencial Punta del Este", "Residencial Real Cayetana", "Residencial San Ángel", "Residencial San Carlos", "Residencial San José", "Residencial Santa Fe", "Residencial Titanio", "Residencial Valle de Arbide", "Residencial Verandas", "Residencial Victoria", "Residencial Villa Contemporánea", "Revolución", "Ribera de Barceló", "Rincón de Bugambilias", "Rincón de La Florida", "Rincón de la Joya", "Rincón de los Olivos", "Rincón del Campestre", "Rinconada de Echeveste", "Rinconada de San Pedro", "Rinconada del Bosque", "Rinconada del Sur", "Río Escondido", "Río Mayo", "Rivera de La Joya", "Rivera de La Presa", "Rivera de La Presa Country", "Rivera de los Castillo", "Rivera de San Bernardo", "Rivera del Carmen (Divina Infantita)", "Rivera del Río", "Rizos del Saucillo", "Rustico Norteña", "San Agustin", "San Alfonso", "San Antonio", "San Antonio del Alambrado", "San Benigno", "San Carlos la Rocha", "San Cristóbal", "San Felipe de Jesús", "San Francisco", "San Ignacio", "San Isidro", "San Isidro Azteca", "San Isidro de Jerez", "San Isidro Labrador", "San Javier", "San Jerónimo I", "San Jerónimo II", "San Jorge", "San Jorge (Los Castillos)", "San José de Cementos", "San José de Los Tanques", "San José del Consuelo", "San José del Consuelo II", "San José El Alto", "San José Obrero", "San Juan Bautista", "San Juan Bosco (Vista Hermosa)", "San Juan de Dios", "San Luis", "San Manuel", "San Marcos", "San Martín de Porres", "San Miguel", "San Miguel de Rentaría", "San Miguel INFONAVIT", "San Nicolás", "San Nicolás del Palote", "San Pablo", "San Pedro de los Hernandez", "San Pedro Plus", "San Rafael", "San Sebastián", "Sangre de Cristo", "Santa Ana AC", "Santa Anita", "Santa Cecilia", "Santa Cecilia II", "Santa Clara", "Santa Cruz", "Santa Fe", "Santa Gertrudis", "Santa Lucia", "Santa Magdalena", "Santa María de Cementos", "Santa María del Granjeno", "Santa Rita", "Santa Rita de los Naranjos", "Santa Rosa de Lima", "Santo Domingo", "Saucillo de La Joya", "Señora Frausto", "Sierra Nogal", "Silglo XXI", "Sinarquista", "Soberna", "Solidaridad Leonesa (pedregal)", "Sur Cementos", "Sur El Granjeno", "Sur Industrial Delta", "Sur La Moreña", "Sur Loma Hermosa", "Sur los Naranjos", "Sur Santa Rosa de Lima", "Tablas de La Virgen", "Tepeyac", "Terracota", "Todos los Santos", "Torre Cumbres", "Torremolinos", "Torres de Country", "Torres del Lago", "Torres Doradas", "Torres Metrópoli", "Trento", "Tres Cantos", "Unidad Deportiva", "Unidad Deportiva II", "Unidad Obrera Infonavit", "Unidad y Esfuerzo Popular", "Unión Comunitaria de León", "Unión Comunitaria los Laureles", "Unión Obrera", "Universidad Torres E Insurgentes", "Valle Antigua", "Valle de Alborada", "Valle de Jerez", "Valle de La Hacienda", "Valle de La Luz", "Valle de las Haciendas", "Valle de las Joya", "Valle de las Toronjas", "Valle de las Torres", "Valle de León", "Valle de Los Castillos", "Valle de los Naranjos", "Valle de Los Pinos", "Valle de San Bernardo", "Valle de San Carlos", "Valle de San Fernando", "Valle de San Isidro", "Valle de San Javier", "Valle de San José", "Valle de San Nicolás", "Valle de San Pedro", "Valle de Señora", "Valle del Campestre", "Valle del Consuelo", "Valle del Maguey", "Valle del Moral", "Valle del Real", "Valle del Roble", "Valle del Rocío", "Valle del Sol", "Valle del Sur", "Valle Delta", "Valle Dorado", "Valle Hermoso", "Valle Imperial", "Valle Jacarandas", "Valle Palermo", "Valtierra", "Versalles", "Villa de Cirella", "Villa de la Rosa", "Villa de las Flores", "Villa de las Torres", "Villa Insurgentes", "Villa la Rioja", "Villa Magna", "Villa Olímpica", "Villa Residencial Arbide", "Villa Sur", "Villa Verde", "Villafranca Residencial", "Villanueva", "Villas Altaria", "Villas Bugambilias", "Villas Constelaciones", "Villas de Barceló", "Villas de Echeveste", "Villas de La Joya", "Villas de La Presa", "Villas de León", "Villas de Nuestra Señora de La Luz", "Villas de Palermo", "Villas de San Isidro", "Villas de San Juan", "Villas de San Nicolás", "Villas de San Nicolás III", "Villas de San Nicolás III Norte", "Villas del Campestre", "Villas del Carmen", "Villas del Country", "Villas del Juncal", "Villas del Mayab", "Villas del Moral", "Villas del Pedregal", "Villas del Valle", "Villas Jacarandas", "Villas La Gloria", "Villas la Luz", "Villas Mariana", "Villas Pradera", "Villas Santa Julia", "Villas Santa Julia II Sección", "Villas Santa Teresita", "Villas Vasco de Quiroga", "Vista Esmeralda", "Vivar", "Xoconoxtle"], "fuenteColonias": "SEPOMEX vía open-mexico/sepomex-db-generator v1.2.0"};</script>
+<script>
+// ===== Núcleo del diseño (sin interfaz). Se usa igual en la página y en las pruebas. =====
+const CORE = (() => {
+  const P_MULT = [0.90, 1.30, 1.60];
+  const D_MULT = [0.80, 1.40, 1.90];
+  // Tercer atributo: 1 = recibe PET mixto, 0 = solo cristalino.
+  // Catálogo C: para quien hoy entrega cristalino o separado (el actual está en el nivel desfavorable). Es el de la v4.
+  const CATALOGO = {
+    1: [[[0,0,0],[2,1,1]], [[0,0,1],[2,2,0]], [[0,2,1],[1,0,0]], [[0,2,1],[2,0,0]]],
+    2: [[[0,0,0],[2,2,1]], [[0,0,1],[1,2,0]], [[0,1,1],[2,0,0]], [[1,0,1],[2,2,0]]]
+  };
+  // Catálogo M: para quien hoy ya entrega mixto (el actual está en el nivel favorable). Mismas reglas de dominancia.
+  const CATALOGO_M = {"1": [[[0, 0, 0], [2, 1, 1]], [[0, 0, 1], [1, 2, 0]], [[0, 0, 1], [2, 0, 0]], [[2, 0, 0], [2, 2, 1]]], "2": [[[0, 0, 0], [2, 2, 1]], [[0, 0, 1], [2, 2, 0]], [[1, 0, 1], [2, 2, 0]], [[1, 2, 1], [2, 0, 0]]]};
+  const ALFABETO = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
+  function fnv(s){ let h=0x811c9dc5; for (const ch of s){ h^=ch.charCodeAt(0); h=Math.imul(h,0x01000193)>>>0; } return h>>>0; }
+  function rng(seed){ let a=seed>>>0; return ()=>{ a=(a+0x6D2B79F5)>>>0; let t=a; t=Math.imul(t^(t>>>15),t|1); t^=t+Math.imul(t^(t>>>7),t|61); return ((t^(t>>>14))>>>0)/4294967296; }; }
+  function barajar(arr, r){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function pid(folio){ return (fnv("pid:"+folio)%900000)+100000; }
+  function bloque(folio){ return (fnv("bloque:"+folio)%2)+1; }
+  function folioValido(f){ return new RegExp("^["+ALFABETO+"]{6}$").test(f||""); }
+  function folioAleatorio(r){ let s=""; for(let i=0;i<6;i++) s+=ALFABETO[Math.floor(r()*ALFABETO.length)]; return s; }
+  // Orden de tarjetas y posición de A/B, deterministas por folio
+  function secuencia(folio){
+    const r=rng(fnv("orden:"+folio)); const b=bloque(folio);
+    const orden=barajar([1,2,3,4], r);
+    return orden.map((tarea,i)=>({tarjeta:i+1, bloque:b, tarea, volteada: r()<0.5?1:0}));
+  }
+  // Orden sorteado de opciones de seguimiento, por folio y tarjeta
+  function ordenOpciones(folio, clave, claves){ return barajar(claves, rng(fnv("op:"+clave+":"+folio))); }
+  // Redondeo, sección 7 (con décimas de km por debajo de 1 km: regla provisional)
+  function gran(x, tipo){
+    if (tipo==="min") return x<10?1:5;
+    if (tipo==="km")  return x<1?0.1:(x<10?0.5:1);
+    return x<10?0.1:0.5; // pesos por kilo
+  }
+  function redondear(x,tipo){ const g=gran(x,tipo); return +(Math.round(x/g)*g).toFixed(2); }
+  function niveles(base, mult, tipo){
+    const v=mult.map(m=>redondear(base*m,tipo));
+    let guard=0;
+    while (v[0]>=base && guard++<50) v[0]=+(v[0]-gran(v[0],tipo)).toFixed(2);
+    while (v[1]<=base && guard++<100) v[1]=+(v[1]+gran(v[1],tipo)).toFixed(2);
+    while (v[2]<=v[1] && guard++<150) v[2]=+(v[2]+gran(v[2],tipo)).toFixed(2);
+    return v;
+  }
+  function nivelesValidos(base,tipo){ const v=niveles(base,D_MULT,tipo); return v[0]>0 && v[0]<base && base<v[1] && v[1]<v[2]; }
+  // Construye una tarjeta con las cifras del participante
+  function tarjeta(folio, paso, p0, d0, dUnid, sqMixto){
+    const np=niveles(p0,P_MULT,"p"), nd=niveles(d0,D_MULT,dUnid);
+    const cat = sqMixto ? CATALOGO_M : CATALOGO; const [a,b]=cat[paso.bloque][paso.tarea-1];
+    const mk=(x,lab)=>({altlab:lab, nivel_precio:x[0], nivel_dist:x[1], mixto:x[2], catalogo: sqMixto?"M":"C",
+      precio:np[x[0]], dist:nd[x[1]], precio_rel:+(np[x[0]]/p0).toFixed(4), dist_rel:+(nd[x[1]]/d0).toFixed(4), asc:1});
+    let A=mk(a,"A"), B=mk(b,"B"); if (paso.volteada){ const t={...A}; A={...B,altlab:"A"}; B={...t,altlab:"B"}; }
+    const SQ={altlab:"SQ", nivel_precio:"", nivel_dist:"", mixto: sqMixto?1:0, catalogo: sqMixto?"M":"C", precio:p0, dist:d0, precio_rel:1, dist_rel:1, asc:0};
+    return [A,B,SQ];
+  }
+  return {P_MULT,D_MULT,CATALOGO,CATALOGO_M,ALFABETO,fnv,rng,barajar,pid,bloque,folioValido,folioAleatorio,secuencia,ordenOpciones,gran,redondear,niveles,nivelesValidos,tarjeta};
+})();
+if (typeof module!=="undefined") module.exports=CORE;
+
+</script>
+<script>
+// ===== Aplicación =====
+const ENVIO = { url: (window.ENVIO_URL || "").trim() };   // Se toma de config.js. Vacía = solo guarda en el teléfono.
+const C = CORE, CFG = window.CONFIG;
+const HOJAS = {
+  panel: ["pid","folio","ciudad","prueba","tarjeta","gid","alt","altlab","choice","precio","precio_ton","precio_rel","dist","dist_unid","dist_rel","ldist","mixto","asc","nivel_precio","nivel_dist","bloque","tarea","volteada","catalogo","con_quien","unidad_venta","vinculo","prop_pet","recepcion","horas","q0","p0","d0","d0_cero","seg_decision","ts"],
+  cantidades: ["pid","folio","ciudad","prueba","tarjeta","gid","elegida","elegida_precio","elegida_dist","elegida_mixto","cantidad_kg","incremento_kg","confirmado","ts"],
+  participantes: ["pid","folio","ciudad","prueba","bloque","lugar","con_quien","n_familia","unidad_venta","horas_semana","prop_pet","deja_pet","deja_razon","colonias_recoleccion","colonias_recoleccion_otra","q0","q0_unidad","q0_costales","q0_kg_costal","n_acopiadores","p0","vinculo","d0","d0_unidad","d0_cero","colonia_acopiador","colonia_acopiador_otra","pago_forma","pago_otra","recepcion","inicio","ts"],
+  origen: ["pid","folio","ciudad","prueba","tarjeta","gid","incremento_kg","accion_principal","horas_extra","ayuda_familiar","personas_nuevas","horas_persona","orden_mostrado","ts"],
+  menos: ["pid","folio","ciudad","prueba","tarjeta","gid","reduccion_kg","razon_principal","orden_mostrado","ts"],
+  demografia: ["pid","folio","ciudad","prueba","si_todos","max_incremento_kg","genero","edad","anios_experiencia","fin","ts"],
+  filtro: ["pid","folio","ciudad","prueba","motivo","ts"]
+};
+
+// ---------- Identidad ----------
+// Cada folio se guarda en su propia clave del teléfono. Así, dos pestañas abiertas con folios distintos
+// (por ejemplo, un encuestador que asiste a varias personas) nunca se sobrescriben.
+let FOLIO = (location.hash||"").replace("#","").toUpperCase(), PRUEBA = 0;
+const PREF = "pet_dce_v5_" + CFG.clave + "_";
+function leer(k){ try { return JSON.parse(localStorage.getItem(k)||"null"); } catch(e){ return null; } }
+function escribir(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+if (!C.folioValido(FOLIO)) {
+  PRUEBA = 1; FOLIO = leer(PREF+"prueba_actual") || C.folioAleatorio(Math.random); escribir(PREF+"prueba_actual", FOLIO);
+}
+const CLAVE = PREF + (PRUEBA ? "prueba_" : "") + FOLIO;
+function guardar(){ escribir(CLAVE, S); }
+let S = leer(CLAVE) || { folio: FOLIO, prueba: PRUEBA, r:{}, paso:0, cola:[], hechos:{}, inicio:new Date().toISOString(), tarj:{}, maxDecl:0, recibidos:0 };
+const PID = C.pid(FOLIO), SEC = C.secuencia(FOLIO);
+
+// ---------- Cola de envío ----------
+function ahora(){ return new Date().toISOString(); }
+function emitir(hoja, obj, unico){
+  if (unico && S.hechos[unico]) return; if (unico) S.hechos[unico]=1;
+  const base = { pid:PID, folio:FOLIO, ciudad:CFG.clave, prueba:PRUEBA, ts:ahora() };
+  const fila = HOJAS[hoja].map(k => { const v = (k in obj) ? obj[k] : base[k]; return v===undefined||v===null ? "" : v; });
+  S.cola.push({ id: FOLIO+"-"+hoja+"-"+(S.cola.length+S.recibidos)+"-"+Date.now().toString(36), hoja, fila });
+  guardar(); enviar();
+}
+async function enviarLote(folio, cola){
+  const resp=await fetch(ENVIO.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({folio, eventos:cola.slice(0,50)})});
+  const j=await resp.json(); return (j && Array.isArray(j.recibidos)) ? new Set(j.recibidos) : null;
+}
+// Envía también lo pendiente de otros folios usados en este teléfono (sesiones anteriores o en otra pestaña).
+async function enviarOtros(){
+  const claves=[]; for (let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if (k && k.startsWith(PREF) && k!==CLAVE && !k.startsWith(PREF+"prueba")) claves.push(k); }
+  for (const k of claves){ const o=leer(k); if(!o || !Array.isArray(o.cola) || !o.cola.length) continue;
+    const ok=await enviarLote(o.folio, o.cola); if(!ok) continue;
+    const fresco=leer(k)||o; const antes=fresco.cola.length; fresco.cola=fresco.cola.filter(e=>!ok.has(e.id)); fresco.recibidos=(fresco.recibidos||0)+antes-fresco.cola.length; escribir(k,fresco); }
+}
+let enviando=false, espera=30000;
+async function enviar(){
+  pintarEstado();
+  if (PRUEBA || !ENVIO.url || enviando || !navigator.onLine) return;   // el modo de prueba nunca envía
+  enviando=true;
+  try {
+    if (S.cola.length){ const ok=await enviarLote(FOLIO, S.cola);
+      if (ok){ const antes=S.cola.length; S.cola=S.cola.filter(e=>!ok.has(e.id)); S.recibidos+=antes-S.cola.length; guardar(); espera=30000; } }
+    await enviarOtros();
+  } catch(e){ espera=Math.min(espera*2, 300000); }
+  enviando=false; pintarEstado();
+  if (S.cola.length) setTimeout(enviar, espera);
+}
+addEventListener("online", enviar);
+function pintarEstado(){ const el=document.getElementById("estado"); if(!el) return;
+  el.textContent = S.cola.length ? (ENVIO.url && !PRUEBA ? `Respuestas por enviar: ${S.cola.length}` : `Guardadas en este teléfono: ${S.cola.length}`) : (PRUEBA ? "" : "Todo enviado"); }
+
+// ---------- Formato ----------
+// Recepción de cada alternativa. La del acopiador actual es la declarada en la pantalla 20.
+function recepcionClave(a){ if(a.altlab==="SQ") return S.r.recepcion; return a.mixto ? "mixto" : "cristalino"; }
+function recepcionTexto(a){ const k=recepcionClave(a); return k==="mixto" ? "Recibe PET mixto: transparente y de colores" : k==="separado" ? "Recibe el PET separado, por color o por tipo" : "Solo recibe PET cristalino o transparente"; }
+function recepcionFrase(a){ const k=recepcionClave(a); return k==="mixto" ? "el PET mixto, transparente y de colores" : k==="separado" ? "el PET separado, por color o por tipo" : "solo el PET cristalino o transparente"; }
+const pesos = x => "$" + Number(x).toFixed(2);
+const vozPesos = x => { const e=Math.floor(x+1e-9), c=Math.round((x-e)*100); return c ? `${e} pesos con ${c} centavos` : `${e} pesos`; };
+const dist = (x,u) => u==="min" ? `${x} min` : `${String(x).replace(".",".")} km`;
+const vozDist = (x,u) => u==="min" ? `${x} minutos` : (x===1 ? "1 kilómetro" : `${x} kilómetros`);
+const kg = x => `${Number(x).toLocaleString("es-MX")} kg`;
+function recordatorioUnidad(){ const u=S.r.unidad_venta; if(u==="conjunta_yo"||u==="conjunta_otro") return "Cuente todo lo que venden juntos, no solo lo suyo."; if(u==="propia") return "Cuente solo lo que vende usted."; return ""; }
+function piensePrincipal(){ return S.r.n_acopiadores && S.r.n_acopiadores!=="uno" ? "Si le vende a más de uno, piense en el acopiador al que le vendió más PET la semana pasada." : ""; }
+
+// ---------- Opciones ----------
+const OP = {
+  edad:[["si","Sí"],["no","No"]],
+  lugar:[["calle","En la calle, en comercios o en casas"],["tiradero","En un tiradero o relleno sanitario"],["planta_acopio","En una planta de separación o en un centro de acopio donde trabajo"],["camion","En el camión de la basura"]],
+  con_quien:[["solo","Solo, yo nada más"],["familia","Con personas de mi familia"],["otros","Con otras personas que no son de mi familia"]],
+  unidad_venta:[["propia","Cada quien vende lo suyo"],["conjunta_yo","Lo vendemos todo junto, y yo lo llevo a vender"],["conjunta_otro","Lo vendemos todo junto, y lo lleva a vender otra persona"]],
+  prop_pet:[["solo","Solo junto PET"],["casi_todo","Junto otros materiales, pero casi todo es PET"],["mas_mitad","Más de la mitad es PET"],["mitad","Más o menos la mitad es PET"],["menos_mitad","Menos de la mitad es PET"]],
+  deja_pet:[["no","No, recojo todo el que veo"],["poco","Sí, un poco"],["bastante","Sí, bastante"]],
+  deja_razon:[["tiempo","No me alcanza el tiempo"],["cabe","No me cabe en lo que cargo"],["guardar","No tengo dónde guardarlo"],["sucio","Está sucio o mezclado"],["paga","No me pagan lo suficiente por ese"]],
+  n_acopiadores:[["uno","Solo a uno"],["dos","A dos"],["tres_mas","A tres o más"]],
+  vinculo:[["libre","No, le vendo a quien yo quiera"],["presta","Sí, porque me presta o me renta con qué cargar"],["adelanta","Sí, porque me adelanta dinero o le debo"],["otra","Sí, por otra razón"]],
+  pago_forma:[["contado","De contado"],["por_kilos","Hasta que junto cierto número de kilos"],["otra","De otra forma"]],
+  recepcion:[["mixto","Mixto, todo el PET junto"],["cristalino","Solo el PET cristalino o transparente"],["separado","Separado, por color o por tipo"]],
+  accion:[["mas_horas","Trabajar más horas"],["mas_calles","Recorrer más calles o colonias"],["pet_que_dejo","Recoger PET que hoy veo y dejo"],["otro_material","Dejar de juntar otro material para juntar más PET"],["otro_acopiador","Venderle menos a otro acopiador"],["comprar_otros","Comprarle PET a otros recolectores"],["mas_familia","Que me ayude más gente de mi familia"]],
+  ayuda:[["familia_nueva","Empezaría a juntar alguien de mi familia que hoy no junta"],["familia_pet","Los de mi familia que ya juntan se enfocarían más en el PET"],["familia_ambas","Las dos cosas"]],
+  menos:[["muy_lejos","Porque me queda muy lejos y no me sale el viaje"],["paga_poco","Porque me pagan poco y no me conviene juntar tanto"],["vendo_otro","Porque una parte se la vendería a otro acopiador"],["lo_guardo","Porque lo guardaría para vender cuando suba el precio"]],
+  si_todos:[["mismos","Sí, los mismos"],["menos","Menos"],["casi_nada","Casi nada más"]],
+  genero:[["mujer","Mujer"],["hombre","Hombre"],["otro","Otro"],["prefiero_no","Prefiero no decir"]]
+};
+const ordenado = (clave, lista) => { const o=C.ordenOpciones(FOLIO, clave, lista.map(x=>x[0])); return o.map(k=>lista.find(x=>x[0]===k)); };
+
+// ---------- Pantallas ----------
+// Cada pantalla: id, cuando(), pinta() -> {titulo, voz, cuerpo(nodo), listo(), alSeguir()}
+const PANT = [];
+const p = (id, def) => PANT.push(Object.assign({id, cuando:()=>true}, def));
+p("intro", {tipo:"info", titulo:"Le queremos preguntar sobre el PET que usted vende.",
+  texto:`Somos Prospectiva Circular, y estamos viendo cuánto cuesta juntar más PET en México. Son unos quince minutos.`,
+  boton:"Siguiente"});
+p("consent", {tipo:"info", titulo:"Antes de empezar",
+  lista:["No le pedimos su nombre ni su teléfono, y nadie va a saber qué contestó usted.","No le vamos a pagar por contestar. Tampoco le vendemos nada.",`Si tiene dudas, hable con Adán Martínez, al ${CFG.telefono}.`,"Este ejercicio es solo para personas de dieciocho años o más.","Puede dejarlo a medias, no pasa nada."],
+  nota:"Si sigue, es porque quiere contestar.", boton:"Empezar"});
+p("edad", {tipo:"uno", campo:"edad_ok", titulo:"¿Tiene usted dieciocho años o más?", ops:()=>OP.edad,
+  despues:v=>{ if(v==="no"){ emitir("filtro",{motivo:"edad"},"filtro-edad"); return "cierre_edad"; } }});
+p("lugar", {tipo:"uno", campo:"lugar", titulo:"La semana pasada, ¿dónde juntó la mayor parte del PET que vendió?", ops:()=>ordenado("lugar",OP.lugar),
+  despues:v=>{ if(v==="tiradero"||v==="planta_acopio"){ emitir("filtro",{motivo:v},"filtro-"+v); return "cierre_lugar"; } }});
+p("con_quien", {tipo:"uno", campo:"con_quien", titulo:"La semana pasada, ¿con quién juntó el material?", ops:()=>OP.con_quien});
+p("n_familia", {tipo:"num", campo:"n_familia", titulo:"La semana pasada, ¿cuántas personas de su familia juntaron material con usted?", nota:"No se cuente usted.", min:1, max:20, cuando:()=>S.r.con_quien==="familia"});
+p("unidad_venta", {tipo:"uno", campo:"unidad_venta", titulo:"La semana pasada, ¿cómo vendieron el material?", ops:()=>OP.unidad_venta, cuando:()=>S.r.con_quien!=="solo"});
+p("horas", {tipo:"num", campo:"horas_semana", titulo:"La semana pasada, ¿cuántas horas le dedicó a esto?", nota:"Cuente el tiempo de juntar el material y el de llevarlo a vender.", min:1, max:112});
+p("prop_pet", {tipo:"uno", campo:"prop_pet", titulo:"De todos los kilos que vendió la semana pasada, ¿cuánto fue PET?", ops:()=>OP.prop_pet});
+p("deja_pet", {tipo:"uno", campo:"deja_pet", titulo:"La semana pasada, cuando salió a juntar, ¿vio PET que no recogió?", ops:()=>OP.deja_pet});
+p("deja_razon", {tipo:"uno", campo:"deja_razon", titulo:"¿Por qué no lo recogió?", nota:"Escoja la razón más importante.", ops:()=>ordenado("deja_razon",OP.deja_razon), cuando:()=>S.r.deja_pet&&S.r.deja_pet!=="no"});
+p("col_recoleccion", {tipo:"lista", campo:"colonias_recoleccion", multiple:3, titulo:"La semana pasada, ¿en qué colonias juntó la mayor parte del PET?", nota:"Escoja hasta tres. Puede escribir para buscar."});
+p("q0", {tipo:"q0", titulo:"La semana pasada, ¿cuánto PET vendió?", nota:()=>("Escriba los kilos. Cuente solo el PET. Si la semana pasada no vendió, piense en la última semana en que sí vendió. "+recordatorioUnidad()).trim()});
+p("n_acopiadores", {tipo:"uno", campo:"n_acopiadores", titulo:"La semana pasada, ¿a cuántos acopiadores diferentes les vendió PET?", ops:()=>OP.n_acopiadores});
+p("p0", {tipo:"num", campo:"p0", decimal:true, titulo:"La semana pasada, ¿en cuánto le pagaron el kilo de PET?", nota:()=>("Escriba los pesos por kilo. "+piensePrincipal()).trim(), min:0.5, max:60, unidad:"$ por kilo"});
+p("vinculo", {tipo:"uno", campo:"vinculo", titulo:"¿Tiene que venderle el PET a un acopiador en particular?", ops:()=>OP.vinculo});
+p("d0", {tipo:"d0", titulo:"¿Qué tan lejos le queda, desde donde junta, el acopiador al que le vendió más PET la semana pasada?", nota:"Escoja si lo mide en kilómetros o en minutos de camino. Luego escriba cuánto. Si el acopiador pasa a recoger el material, escriba 0."});
+p("col_acopiador", {tipo:"lista", campo:"colonia_acopiador", multiple:1, titulo:"¿En qué colonia está el acopiador al que le vendió más PET la semana pasada?", nota:"Puede escribir para buscar."});
+p("pago", {tipo:"uno", campo:"pago_forma", otra:"pago_otra", titulo:"¿Cómo le paga el acopiador al que le vendió más PET la semana pasada?", ops:()=>OP.pago_forma});
+p("recepcion", {tipo:"uno", campo:"recepcion", titulo:"¿Cómo le recibe el material ese mismo acopiador?", ops:()=>OP.recepcion});
+function emitirParticipantes(){ limpiarNoAplicables(); { const r=S.r; emitir("participantes",{bloque:SEC[0].bloque,lugar:r.lugar,con_quien:r.con_quien,n_familia:r.n_familia,unidad_venta:r.unidad_venta||"",horas_semana:r.horas_semana,prop_pet:r.prop_pet,deja_pet:r.deja_pet,deja_razon:r.deja_razon||"",colonias_recoleccion:(r.colonias_recoleccion||[]).join("|"),colonias_recoleccion_otra:r.colonias_recoleccion_otra||"",q0:r.q0,q0_unidad:r.q0_unidad,q0_costales:r.q0_costales||"",q0_kg_costal:r.q0_kg_costal||"",n_acopiadores:r.n_acopiadores,p0:r.p0,vinculo:r.vinculo,d0:r.d0,d0_unidad:r.d0_unidad,d0_cero:r.d0_cero?1:0,colonia_acopiador:(r.colonia_acopiador||[]).join("|"),colonia_acopiador_otra:r.colonia_acopiador_otra||"",pago_forma:r.pago_forma,pago_otra:r.pago_otra||"",recepcion:r.recepcion,inicio:S.inicio},"participantes"); } }
+p("escenario", {tipo:"escenario"});
+for (let t=1;t<=4;t++){
+  p("card"+t, {tipo:"card", t});
+  p("qty"+t, {tipo:"qty", t});
+  p("conf"+t, {tipo:"conf", t, cuando:()=>S.tarj[t]&&S.tarj[t].pedirConf});
+  p("acc"+t, {tipo:"uno", t, campoT:"accion", titulo:()=>`Para juntar esos ${kg(S.tarj[t].inc)} de más, ¿qué haría principalmente?`, nota:"Escoja la respuesta más importante, la que explique la mayor parte.", ops:()=>ordenado("acc"+t,OP.accion), cuando:()=>S.tarj[t]&&S.tarj[t].pedirAccion});
+  p("hrs"+t, {tipo:"num", t, campoT:"horas_extra", titulo:"¿Cuántas horas más a la semana tendría que trabajar?", min:1, max:80, cuando:()=>S.tarj[t]&&S.tarj[t].pedirAccion&&["mas_horas","mas_calles"].includes(S.tarj[t].accion)});
+  p("ayu"+t, {tipo:"uno", t, campoT:"ayuda", titulo:"¿Cómo le ayudarían?", ops:()=>OP.ayuda, cuando:()=>S.tarj[t]&&S.tarj[t].pedirAccion&&S.tarj[t].accion==="mas_familia"&&S.r.con_quien==="familia"});
+  p("per"+t, {tipo:"perhor", t, cuando:()=>{ const x=S.tarj[t]; if(!x||!x.pedirAccion||x.accion!=="mas_familia") return false; const a=S.r.con_quien==="familia"?x.ayuda:"familia_nueva"; return a==="familia_nueva"||a==="familia_ambas"; }});
+  p("men"+t, {tipo:"uno", t, campoT:"razon_menos", titulo:()=>`¿Por qué vendería ${kg(S.tarj[t].red)} menos?`, nota:"Escoja la razón más importante.", ops:()=>ordenado("men"+t,OP.menos), cuando:()=>S.tarj[t]&&S.tarj[t].red>0});
+  p("fin"+t, {tipo:"cierreTarjeta", t});
+}
+p("si_todos", {tipo:"uno", campo:"si_todos", titulo:()=>`Usted dijo que podría vender hasta ${kg(S.maxInc)} más a la semana. Si a todos los que juntan en su zona les pagaran lo mismo, ¿podría juntar esos mismos kilos de más?`, ops:()=>OP.si_todos, cuando:()=>S.maxInc>0});
+p("datos", {tipo:"datos"});
+p("gracias", {tipo:"gracias"});
+p("cierre_edad", {tipo:"cierre", texto:"Gracias. Este ejercicio es solo para personas mayores de edad. Puede cerrar esta página.", cuando:()=>false});
+p("cierre_lugar", {tipo:"cierre", texto:"Gracias. Por ahora este ejercicio es solo para quienes juntan en la calle, en comercios, en casas o en el camión de la basura. Puede cerrar esta página.", cuando:()=>false});
+
+const idx = id => PANT.findIndex(x=>x.id===id);
+function siguiente(desde){ for(let i=desde+1;i<PANT.length;i++){ if(PANT[i].cuando()) return i; } return idx("gracias"); }
+
+// ---------- Interfaz ----------
+const $ = (tag, attrs={}, ...hijos) => { const e=document.createElement(tag); for(const [k,v] of Object.entries(attrs)){ if(k==="class") e.className=v; else if(k.startsWith("on")) e.addEventListener(k.slice(2),v); else if(v!==false&&v!=null) e.setAttribute(k,v===true?"":v); } for(const h of hijos.flat()){ if(h==null||h===false) continue; e.append(h.nodeType?h:document.createTextNode(h)); } return e; };
+const val = (x) => typeof x==="function" ? x() : x;
+let tInicio=0;
+
+const ZONA_EJERCICIO = /^(card|qty|conf|acc|hrs|ayu|per|men|fin)\d$/;
+function enEjercicio(i){ return i!=null && i>=0 && ZONA_EJERCICIO.test(PANT[i].id); }
+function ir(i, sinHistorial){ if(!sinHistorial){ S.hist=S.hist||[]; S.hist.push(S.paso); } S.paso=i; guardar(); pintar(); }
+function avanzar(destino){ if (destino) return ir(idx(destino)); ir(siguiente(S.paso)); }
+function anterior(){ const h=S.hist||[]; return h.length ? h[h.length-1] : null; }
+function puedeVolver(){ const P=PANT[S.paso], prev=anterior(); if(prev==null) return false; if(["intro","gracias"].includes(P.id)) return false; return !enEjercicio(S.paso) && !enEjercicio(prev); }
+function volver(){ if(!puedeVolver()) return; const prev=S.hist.pop(); S.paso=prev; guardar(); pintar(); }
+function limpiarNoAplicables(){ PANT.forEach(P=>{ if(P.campo && !P.t && !P.cuando()) delete S.r[P.campo]; }); const r=S.r;
+  if(r.pago_forma!=="otra") delete r.pago_otra;
+  if(!(r.colonias_recoleccion||[]).includes("NO_ESTA")) delete r.colonias_recoleccion_otra;
+  if(!(r.colonia_acopiador||[]).includes("NO_ESTA")) delete r.colonia_acopiador_otra; }
+
+function pintar(){
+  const P = PANT[S.paso]; const main=document.getElementById("main"); main.innerHTML="";
+  const pie=document.getElementById("pie"); pie.innerHTML="";
+  let voz=""; const btn=(txt, ok, fn, cls="primario") => { const b=$("button",{class:"btn "+cls, onclick:()=>{ if(!ok()) return; fn(); }}, txt); b.disabled=!ok(); pie.append(b); return b; };
+  const titulo=(t)=>{ const h=$("h1",{tabindex:"-1"},t); main.append(h); voz+=t+" "; return h; };
+  const nota=(t)=>{ if(!t) return; main.append($("p",{class:"nota"},t)); voz+=t+" "; };
+  const refrescar=()=>{ const b=pie.querySelector(".primario"); if(b&&b._ok) b.disabled=!b._ok(); };
+  tInicio=performance.now();
+
+  if (P.tipo==="info"){
+    titulo(P.titulo); if(P.texto){ main.append($("p",{class:"texto"},P.texto)); voz+=P.texto+" "; }
+    if(P.lista){ main.append($("ul",{class:"lista"},P.lista.map(x=>$("li",{},x)))); voz+=P.lista.join(" ")+" "; }
+    nota(P.nota); btn(P.boton,()=>true,()=>avanzar());
+  }
+  else if (P.tipo==="uno"){
+    const t=P.t, store = t ? S.tarj[t] : S.r, campo = t ? P.campoT : P.campo;
+    titulo(val(P.titulo)); nota(val(P.nota));
+    const ops=val(P.ops); const grupo=$("div",{class:"opciones",role:"radiogroup"});
+    let otraIn=null;
+    ops.forEach(([k,lab],i)=>{ const b=$("button",{class:"op"+(store[campo]===k?" sel":""),role:"radio","aria-checked":store[campo]===k?"true":"false", onclick:()=>{ store[campo]=k; guardar(); grupo.querySelectorAll(".op").forEach(x=>{x.classList.remove("sel");x.setAttribute("aria-checked","false");}); b.classList.add("sel"); b.setAttribute("aria-checked","true"); if(otraIn) otraIn.parentNode.hidden = k!=="otra"; refrescar(); }},
+      $("span",{class:"marca","aria-hidden":"true"}), $("span",{},lab)); grupo.append(b); });
+    main.append(grupo); voz+=ops.map(([,l],i)=>`Opción ${i+1}: ${l}.`).join(" ");
+    if (P.otra){ otraIn=$("input",{type:"text",maxlength:"120",value:S.r[P.otra]||"",placeholder:"Escriba cuál",oninput:e=>{S.r[P.otra]=e.target.value;guardar();refrescar();}}); const w=$("label",{class:"campo"},"¿Cuál?",otraIn); w.hidden=store[campo]!=="otra"; main.append(w); }
+    const b=btn("Siguiente",()=>!!store[campo]&&(!P.otra||store[campo]!=="otra"||(S.r[P.otra]||"").trim().length>0),()=>{
+      if (t) S.tarj[t].orden = S.tarj[t].orden || {}; if (t) S.tarj[t].orden[campo]=ops.map(x=>x[0]).join("|");
+      const d = P.despues ? P.despues(store[campo]) : null; guardar(); avanzar(d); }); b._ok=()=>!!store[campo]&&(!P.otra||store[campo]!=="otra"||(S.r[P.otra]||"").trim().length>0);
+  }
+  else if (P.tipo==="num"){
+    const t=P.t, store=t?S.tarj[t]:S.r, campo=t?P.campoT:P.campo;
+    titulo(val(P.titulo)); nota(val(P.nota));
+    const inp=$("input",{type:"text",inputmode:P.decimal?"decimal":"numeric",autocomplete:"off",class:"grande",value:store[campo]??"","aria-label":val(P.titulo)});
+    const ok=()=>{ const n=parseFloat(String(inp.value).replace(",", ".")); return isFinite(n)&&n>=P.min&&n<=P.max; };
+    inp.addEventListener("input",()=>{ refrescar(); });
+    main.append($("div",{class:"numfila"}, P.unidad?$("span",{class:"unidad"},P.unidad):null, inp));
+    const b=btn("Siguiente",ok,()=>{ store[campo]=parseFloat(String(inp.value).replace(",", ".")); guardar(); avanzar(); }); b._ok=ok;
+    setTimeout(()=>inp.focus(),50);
+  }
+  else if (P.tipo==="q0"){
+    titulo(P.titulo); nota(val(P.nota));
+    const r=S.r; let modo=r.q0_unidad==="costales"?"costales":"kg";
+    const box=$("div");
+    const draw=()=>{ box.innerHTML="";
+      if(modo==="kg"){ const i=$("input",{type:"text",inputmode:"numeric",class:"grande",value:r.q0_unidad==="kg"?(r.q0??""):"","aria-label":"Kilos por semana",oninput:e=>{r._kg=e.target.value;refrescar();}}); r._kg=i.value;
+        box.append($("div",{class:"numfila"},i,$("span",{class:"unidad"},"kilos")), $("button",{class:"enlace",onclick:()=>{modo="costales";draw();refrescar();}},"No lo cuento en kilos, sino en costales o viajes")); }
+      else { const a=$("input",{type:"text",inputmode:"numeric",class:"grande",value:r.q0_costales??"","aria-label":"Costales o viajes por semana",oninput:e=>{r._c=e.target.value;refrescar();}}); const b=$("input",{type:"text",inputmode:"decimal",class:"grande",value:r.q0_kg_costal??"","aria-label":"Kilos por costal",oninput:e=>{r._k=e.target.value;refrescar();}}); r._c=a.value; r._k=b.value;
+        box.append($("label",{class:"campo"},"¿Cuántos costales o viajes hace en una semana?",a), $("label",{class:"campo"},"¿Y cuántos kilos pesa cada uno, más o menos?",b), $("button",{class:"enlace",onclick:()=>{modo="kg";draw();refrescar();}},"Mejor lo escribo en kilos")); voz+=" ¿Cuántos costales o viajes hace en una semana? ¿Y cuántos kilos pesa cada uno, más o menos?"; } };
+    draw(); main.append(box);
+    const ok=()=> modo==="kg" ? (+r._kg>0&&+r._kg<=5000) : (+r._c>0&&+String(r._k).replace(",",".")>0&&(+r._c)*(+String(r._k).replace(",","."))<=5000);
+    const b=btn("Siguiente",ok,()=>{ if(modo==="kg"){ r.q0=Math.round(+r._kg); r.q0_unidad="kg"; r.q0_costales=""; r.q0_kg_costal=""; } else { r.q0_costales=+r._c; r.q0_kg_costal=+String(r._k).replace(",","."); r.q0=Math.round(r.q0_costales*r.q0_kg_costal); r.q0_unidad="costales"; } guardar(); avanzar(); }); b._ok=ok;
+  }
+  else if (P.tipo==="d0"){
+    titulo(P.titulo); nota(val(P.nota)); const r=S.r; r.d0_unidad=r.d0_unidad||"";
+    const g=$("div",{class:"opciones dos",role:"radiogroup"}); const inp=$("input",{type:"text",inputmode:"decimal",class:"grande",value:r.d0_cero?0:(r.d0??""),"aria-label":"Distancia"}); const un=$("span",{class:"unidad"}, r.d0_unidad==="min"?"minutos":r.d0_unidad==="km"?"kilómetros":"");
+    [["km","Kilómetros"],["min","Minutos de camino"]].forEach(([k,l])=>{ const b=$("button",{class:"op"+(r.d0_unidad===k?" sel":""),role:"radio",onclick:()=>{ r.d0_unidad=k; g.querySelectorAll(".op").forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); un.textContent=k==="min"?"minutos":"kilómetros"; refrescar(); inp.focus(); }},$("span",{class:"marca"}),$("span",{},l)); g.append(b); });
+    const aviso=$("p",{class:"aviso",hidden:true});
+    main.append(g,$("div",{class:"numfila"},inp,un),aviso);
+    const n=()=>parseFloat(String(inp.value).replace(",","."));
+    const ok=()=>{ const x=n(); if(!r.d0_unidad||inp.value===""||!isFinite(x)||x<0) return false; const valido = x===0 || (r.d0_unidad==="min" ? (x>=2&&x<=240) : (x>=0.2&&x<=100)); aviso.hidden=valido; aviso.textContent = r.d0_unidad==="min" ? "Escriba entre 2 y 240 minutos, o 0 si el acopiador pasa a recoger. Si le queda a menos de 2 minutos, escríbalo en kilómetros." : "Escriba entre 0.2 y 100 kilómetros, o 0 si el acopiador pasa a recoger."; return valido; };
+    inp.addEventListener("input",refrescar);
+    const b=btn("Siguiente",ok,()=>{ const x=n(); if(x===0){ r.d0_cero=1; r.d0=0.2; r.d0_unidad="km"; } else { r.d0_cero=0; r.d0=r.d0_unidad==="min"?Math.round(x):+x.toFixed(1); } guardar(); avanzar(); }); b._ok=ok;
+  }
+  else if (P.tipo==="lista"){
+    titulo(P.titulo); nota(P.nota); const r=S.r; const sel=new Set(r[P.campo]||[]); const otraK=P.campo+"_otra";
+    const buscar=$("input",{type:"search",class:"buscar",placeholder:"Buscar colonia","aria-label":"Buscar colonia",autocomplete:"off"});
+    const cont=$("div",{class:"listaScroll",role:"listbox","aria-multiselectable":P.multiple>1?"true":"false"});
+    const chips=$("p",{class:"elegidas"});
+    const otraIn=$("input",{type:"text",maxlength:"120",value:r[otraK]||"",placeholder:"Nombre de la colonia",oninput:e=>{r[otraK]=e.target.value;guardar();refrescar();}});
+    const otraBox=$("label",{class:"campo"},"Escriba el nombre de la colonia",otraIn); otraBox.hidden=!sel.has("NO_ESTA");
+    const norm=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+    const items=[["NO_ESTA","Mi colonia no está en la lista"],...CFG.colonias.map(c=>[c,c])];
+    const pintaChips=()=>{ chips.textContent = sel.size ? "Elegidas: "+[...sel].map(k=>k==="NO_ESTA"?"otra":k).join(", ") : ""; };
+    const draw=()=>{ cont.innerHTML=""; const q=norm(buscar.value.trim());
+      items.filter(([k,l])=>k==="NO_ESTA"||!q||norm(l).includes(q)).forEach(([k,l])=>{
+        const b=$("button",{class:"item"+(sel.has(k)?" sel":"")+(k==="NO_ESTA"?" otra":""),role:"option","aria-selected":sel.has(k)?"true":"false",onclick:()=>{
+          if(sel.has(k)) sel.delete(k); else { if(P.multiple===1) sel.clear(); if(sel.size>=P.multiple) return; sel.add(k); }
+          r[P.campo]=[...sel]; otraBox.hidden=!sel.has("NO_ESTA"); guardar(); draw(); pintaChips(); refrescar(); }},$("span",{class:"marca"}),$("span",{},l)); cont.append(b); }); };
+    buscar.addEventListener("input",draw); draw(); pintaChips();
+    main.append(buscar,cont,chips,otraBox);
+    const ok=()=>sel.size>0&&(!sel.has("NO_ESTA")||(r[otraK]||"").trim().length>1);
+    const b=btn("Siguiente",ok,()=>{ r[P.campo]=[...sel]; guardar(); avanzar(); }); b._ok=ok;
+  }
+  else if (P.tipo==="escenario"){
+    titulo("Así se ven");
+    const txt=["Imagine, por favor, que puede elegir entre el acopiador al que le vendió más PET la semana pasada y dos acopiadores que le vamos a describir.","Los acopiadores se distinguen por el precio que le pagan por el PET, por la distancia entre donde usted recolecta y el acopiador, y por el PET que le reciben: solo el cristalino o transparente, o mixto, transparente y de colores.","Lo demás es igual a como trabaja hoy su acopiador: la forma de pagarle.","Estos acopiadores no existen, es un ejercicio. Aun así conteste como si fuera de verdad."];
+    txt.forEach(x=>main.append($("p",{class:"texto"},x))); voz+=txt.join(" ");
+    const ej=C.tarjeta(FOLIO,{bloque:1,tarea:4,volteada:0},S.r.p0,S.r.d0,S.r.d0_unidad,S.r.recepcion==="mixto");
+    main.append($("p",{class:"nota"},"Ejemplo con sus cifras:"), tablaTarjeta(ej,null,false));
+    btn("Empezar el ejercicio",()=>true,()=>{ emitirParticipantes(); avanzar(); });
+  }
+  else if (P.tipo==="card"){
+    const t=P.t, paso=SEC[t-1]; S.tarj[t]=S.tarj[t]||{}; const x=S.tarj[t];
+    const alts=C.tarjeta(FOLIO,paso,S.r.p0,S.r.d0,S.r.d0_unidad,S.r.recepcion==="mixto"); x.alts=alts;
+    titulo(`Ejercicio ${t} de 4. ¿A cuál le vendería?`); nota("Considere solo estas tres opciones. Toque la que escoja.");
+    voz+=alts.map(a=>`${a.altlab==="SQ"?"Mi acopiador actual":"Acopiador "+a.altlab}. Le pagan ${vozPesos(a.precio)} el kilo. Queda a ${vozDist(a.dist,S.r.d0_unidad)} de camino. ${recepcionTexto(a)}.`).join(" ");
+    const tab=tablaTarjeta(alts,x.eleccion,true,(i)=>{ x.eleccion=i; guardar(); refrescar(); }); main.append(tab);
+    const ok=()=>x.eleccion!=null;
+    const b=btn("Siguiente",ok,()=>{
+      x.seg=Math.round((performance.now()-tInicio)/1000);
+      const r=S.r; alts.forEach((a,i)=>emitir("panel",{tarjeta:t,gid:PID*10+t,alt:i+1,altlab:a.altlab,choice:i===x.eleccion?1:0,precio:a.precio,precio_ton:Math.round(a.precio*1000),precio_rel:a.precio_rel,dist:a.dist,dist_unid:r.d0_unidad,dist_rel:a.dist_rel,ldist:+Math.log(a.dist_rel).toFixed(4),mixto:a.mixto,asc:a.asc,nivel_precio:a.nivel_precio,nivel_dist:a.nivel_dist,bloque:paso.bloque,tarea:paso.tarea,volteada:paso.volteada,catalogo:a.catalogo,con_quien:r.con_quien,unidad_venta:r.unidad_venta||"",vinculo:r.vinculo,prop_pet:r.prop_pet,recepcion:r.recepcion,horas:r.horas_semana,q0:r.q0,p0:r.p0,d0:r.d0,d0_cero:r.d0_cero?1:0,seg_decision:x.seg},"panel"+t+"-"+(i+1)));
+      avanzar(); }); b._ok=ok;
+  }
+  else if (P.tipo==="qty"){
+    const t=P.t, x=S.tarj[t], a=x.alts[x.eleccion], r=S.r;
+    const nom = a.altlab==="SQ" ? "con su acopiador de siempre" : `con el Acopiador ${a.altlab}`;
+    const frase = `Si la próxima semana le pagaran ${pesos(a.precio)} el kilo, le recibieran ${recepcionFrase(a)}, y vendiera ${nom}, a ${dist(a.dist,r.d0_unidad)} de camino…`;
+    main.append($("p",{class:"escenario"},frase)); voz+=`Si la próxima semana le pagaran ${vozPesos(a.precio)} el kilo, le recibieran ${recepcionFrase(a)}, y vendiera ${nom}, a ${vozDist(a.dist,r.d0_unidad)} de camino. `;
+    titulo("¿Cuántos kilos le vendería en esa semana?"); nota(`La semana pasada usted vendió ${kg(r.q0)}. ${recordatorioUnidad()}`.trim());
+    const inp=$("input",{type:"text",inputmode:"numeric",class:"grande",value:x.cantidad??"","aria-label":"Kilos en esa semana"});
+    const ok=()=>{ const n=+inp.value; return inp.value!==""&&isFinite(n)&&n>=0&&n<=10000; };
+    inp.addEventListener("input",refrescar); main.append($("div",{class:"numfila"},inp,$("span",{class:"unidad"},"kilos")));
+    const b=btn("Siguiente",ok,()=>{ const n=Math.round(+inp.value); x.cantidad=n; x.inc=Math.max(0,n-r.q0); x.red=Math.max(0,r.q0-n);
+      const prev=Object.entries(S.tarj).filter(([k,v])=>+k<t&&v.cantidad!=null).map(([k,v])=>v.cantidad);
+      const maxPrev=Math.max(r.q0,...prev); x.pedirConf = n>maxPrev && prev.length>0 ? true : (n>r.q0 && prev.length===0 ? false : x.pedirConf&&false);
+      x.pedirConf = n>maxPrev && prev.length>0; x.maxPrev=maxPrev;
+      x.pedirAccion = x.inc>0 && !prev.includes(n);
+      x.confirmado = x.pedirConf?0:1; guardar(); avanzar(); }); b._ok=ok; setTimeout(()=>inp.focus(),50);
+  }
+  else if (P.tipo==="conf"){
+    const t=P.t, x=S.tarj[t]; titulo("¿Está seguro?"); const tx=`Antes dijo que vendería ${kg(x.maxPrev)} como máximo. Ahora dice ${kg(x.cantidad)}.`; main.append($("p",{class:"texto"},tx)); voz+=tx+" Si está bien, toque Está bien. Si se equivocó, toque Corregir.";
+    btn("Corregir",()=>true,()=>{ ir(idx("qty"+t)); },"secundario");
+    btn("Está bien",()=>true,()=>{ x.confirmado=1; guardar(); avanzar(); });
+  }
+  else if (P.tipo==="perhor"){
+    const t=P.t, x=S.tarj[t]; titulo("¿Cuántas personas de su familia empezarían a juntar?");
+    const a=$("input",{type:"text",inputmode:"numeric",class:"grande",value:x.personas_nuevas??"","aria-label":"Personas"}); const b2=$("input",{type:"text",inputmode:"numeric",class:"grande",value:x.horas_persona??"","aria-label":"Horas por persona"});
+    main.append($("div",{class:"numfila"},a,$("span",{class:"unidad"},"personas")), $("label",{class:"campo"},"¿Cuántas horas a la semana juntaría cada una, más o menos?",$("div",{class:"numfila"},b2,$("span",{class:"unidad"},"horas"))));
+    voz+="¿Cuántas horas a la semana juntaría cada una, más o menos?";
+    const ok=()=>+a.value>=1&&+a.value<=10&&+b2.value>=1&&+b2.value<=80; [a,b2].forEach(i=>i.addEventListener("input",refrescar));
+    const b=btn("Siguiente",ok,()=>{ x.personas_nuevas=+a.value; x.horas_persona=+b2.value; guardar(); avanzar(); }); b._ok=ok;
+  }
+  else if (P.tipo==="cierreTarjeta"){
+    const t=P.t, x=S.tarj[t], a=x.alts[x.eleccion];
+    emitir("cantidades",{tarjeta:t,gid:PID*10+t,elegida:a.altlab,elegida_precio:a.precio,elegida_dist:a.dist,elegida_mixto:a.mixto,cantidad_kg:x.cantidad,incremento_kg:x.cantidad-S.r.q0,confirmado:x.confirmado},"cant"+t);
+    if (x.pedirAccion && x.accion){ const ayuda = x.accion==="mas_familia" ? (S.r.con_quien==="familia"?x.ayuda:"familia_nueva") : "";
+      emitir("origen",{tarjeta:t,gid:PID*10+t,incremento_kg:x.inc,accion_principal:x.accion,horas_extra:x.horas_extra||"",ayuda_familiar:ayuda,personas_nuevas:x.personas_nuevas||"",horas_persona:x.horas_persona||"",orden_mostrado:(x.orden&&x.orden.accion)||""},"orig"+t); }
+    if (x.red>0 && x.razon_menos) emitir("menos",{tarjeta:t,gid:PID*10+t,reduccion_kg:x.red,razon_principal:x.razon_menos,orden_mostrado:(x.orden&&x.orden.razon_menos)||""},"men"+t);
+    S.maxInc=Math.max(0,...Object.values(S.tarj).map(v=>v.inc||0)); guardar(); return avanzar();
+  }
+  else if (P.tipo==="datos"){
+    titulo("Para terminar, unos datos suyos."); nota("Nos sirven para describir a quiénes participaron. No se guarda nada que lo identifique.");
+    const r=S.r; const g=$("div",{class:"opciones dos",role:"radiogroup"});
+    OP.genero.forEach(([k,l])=>{ const b=$("button",{class:"op"+(r.genero===k?" sel":""),onclick:()=>{r.genero=k; g.querySelectorAll(".op").forEach(z=>z.classList.remove("sel")); b.classList.add("sel"); refrescar();}},$("span",{class:"marca"}),$("span",{},l)); g.append(b); });
+    const e=$("input",{type:"text",inputmode:"numeric",class:"grande",value:r.edad??"","aria-label":"Edad"}); const y=$("input",{type:"text",inputmode:"numeric",class:"grande",value:r.anios??"","aria-label":"Años en la actividad"});
+    main.append($("p",{class:"campo"},"Su género"),g,$("label",{class:"campo"},"¿Cuántos años tiene?",e),$("label",{class:"campo"},"¿Cuántos años lleva en esta actividad?",y));
+    voz+="Escoja su género. ¿Cuántos años tiene? ¿Cuántos años lleva en esta actividad?";
+    const ok=()=>!!r.genero&&+e.value>=18&&+e.value<=100&&y.value!==""&&+y.value>=0&&+y.value<=90; [e,y].forEach(i=>i.addEventListener("input",refrescar));
+    const b=btn("Terminar",ok,()=>{ r.edad=+e.value; r.anios=+y.value; emitir("demografia",{si_todos:r.si_todos||"",max_incremento_kg:S.maxInc||0,genero:r.genero,edad:r.edad,anios_experiencia:r.anios,fin:ahora()},"demografia"); guardar(); avanzar(); }); b._ok=ok;
+  }
+  else if (P.tipo==="gracias"){
+    titulo("Listo. Muchas gracias.");
+    const tx = ENVIO.url ? "Sus respuestas quedaron guardadas en este teléfono y se mandan solas cuando haya señal. No tiene que hacer nada más." : "Sus respuestas quedaron guardadas en este teléfono.";
+    main.append($("p",{class:"texto"},tx)); voz+=tx;
+    if (PRUEBA) main.append(panelPrueba());
+  }
+  else if (P.tipo==="cierre"){ titulo(P.texto); if (PRUEBA) main.append(panelPrueba()); }
+
+  if (puedeVolver()) { const b=$("button",{class:"btn secundario atras",onclick:volver},"Atrás"); pie.prepend(b); }
+  document.getElementById("progreso").textContent = PRUEBA ? `Modo de prueba · folio ${FOLIO}` : "";
+  const h=main.querySelector("h1"); if(h) h.focus({preventScroll:true}); window.scrollTo(0,0); pintarEstado();
+}
+
+function tablaTarjeta(alts, elegida, activa, alElegir){
+  const cont=$("div",{class:"tarjeta",role:activa?"radiogroup":null});
+  const pisadas=(rel)=>{ const n = rel<0.999 ? Math.max(1,Math.floor(2*rel)) : (rel<=1.001 ? 2 : Math.max(3,Math.min(5,Math.round(2*rel)))); const w=$("span",{class:"pisadas","aria-hidden":"true"}); for(let i=0;i<n;i++) w.append(svgPie()); return w; };
+  alts.forEach((a,i)=>{
+    const nom=a.altlab==="SQ"?"Mi acopiador actual":`Acopiador ${a.altlab}`;
+    const row=$(activa?"button":"div",{class:"alt"+(a.altlab==="SQ"?" actual":"")+(elegida===i?" sel":""),role:activa?"radio":null,"aria-checked":activa?(elegida===i?"true":"false"):null,
+      onclick: activa?()=>{ cont.querySelectorAll(".alt").forEach(z=>{z.classList.remove("sel");z.setAttribute("aria-checked","false");}); row.classList.add("sel"); row.setAttribute("aria-checked","true"); alElegir(i); }:null},
+      $("span",{class:"nom"}, activa?$("span",{class:"marca","aria-hidden":"true"}):null, nom),
+      $("span",{class:"precio"}, pesos(a.precio), $("small",{}," el kilo")),
+      $("span",{class:"dist"}, dist(a.dist,S.r.d0_unidad), pisadas(a.dist_rel)),
+      $("span",{class:"gar"}, recepcionTexto(a)));
+    cont.append(row); });
+  return cont;
+}
+function svgPie(){ const s=document.createElementNS("http://www.w3.org/2000/svg","svg"); s.setAttribute("viewBox","0 0 12 18"); s.setAttribute("class","pie"); s.innerHTML='<ellipse cx="6" cy="10" rx="4" ry="6.5" fill="currentColor"/><circle cx="3" cy="2.2" r="1.3" fill="currentColor"/><circle cx="6.5" cy="1.6" r="1.3" fill="currentColor"/>'; return s; }
+
+function panelPrueba(){
+  const box=$("section",{class:"prueba"}, $("h2",{},"Respuestas guardadas en este teléfono"), $("p",{class:"nota"},"Solo aparece en modo de prueba, sin folio en el enlace. En campo cada participante usa un enlace con su folio."));
+  const porHoja={}; S.cola.forEach(e=>(porHoja[e.hoja]=porHoja[e.hoja]||[]).push(e.fila));
+  Object.keys(HOJAS).forEach(h=>{ const filas=porHoja[h]||[]; if(!filas.length) return;
+    const t=$("table",{},$("thead",{},$("tr",{},HOJAS[h].map(c=>$("th",{},c)))),$("tbody",{},filas.map(f=>$("tr",{},f.map(v=>$("td",{},String(v)))))));
+    box.append($("h3",{},`${h} (${filas.length})`),$("div",{class:"desliza"},t)); });
+  box.append($("button",{class:"btn secundario",onclick:()=>{ if(confirm("¿Borrar las respuestas de prueba y empezar de nuevo?")){ try{localStorage.removeItem(CLAVE); localStorage.removeItem(PREF+"prueba_actual");}catch(e){} location.reload(); } }},"Empezar otra prueba"));
+  return box;
+}
+
+// ---------- Arranque ----------
+pintar(); enviar();
+if ("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.hostname)) { navigator.serviceWorker.register("sw.js").catch(()=>{}); }
+
+</script>
+</body>
+</html>
