@@ -242,7 +242,7 @@ p("intro", {tipo:"info", titulo:"Le queremos preguntar sobre el PET que usted ve
   texto:`Somos Prospectiva Circular, y estamos viendo cuánto cuesta juntar más PET en México. Son unos quince minutos.`,
   boton:"Siguiente"});
 p("consent", {tipo:"info", titulo:"Antes de empezar",
-  lista:["No le pedimos su nombre ni su teléfono, y nadie va a saber qué contestó usted.","No le vamos a pagar por contestar. Tampoco le vendemos nada.",`Si tiene dudas, hable con Adán Martínez, al ${CFG.telefono}.`,"Este ejercicio es solo para personas de dieciocho años o más.","Puede dejarlo a medias, no pasa nada."],
+  lista:["No le pedimos su nombre ni su teléfono, y nadie va a saber qué contestó usted.",`Si tiene dudas, hable con Adán Martínez, al ${CFG.telefono}.`,"Este ejercicio es solo para personas de dieciocho años o más.","Puede dejarlo a medias, no pasa nada."],
   nota:"Si sigue, es porque quiere contestar.", boton:"Empezar"});
 p("edad", {tipo:"uno", campo:"edad_ok", titulo:"¿Tiene usted dieciocho años o más?", ops:()=>OP.edad,
   despues:v=>{ if(v==="no"){ emitir("filtro",{motivo:"edad"},"filtro-edad"); return "cierre_edad"; } }});
